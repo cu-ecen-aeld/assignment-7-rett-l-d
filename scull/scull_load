@@ -1,8 +1,14 @@
 #!/bin/sh
-# $Id: scull_load,v 1.4 2004/11/03 06:19:49 rubini Exp $
+# Corrected script to load the scull module using the absolute path in the target system.
+
 module="scull"
 device="scull"
 mode="664"
+
+# 1. Dynamically determine the current running kernel version
+KERNEL_VERSION=$(uname -r)
+MODULE_PATH="/lib/modules/$KERNEL_VERSION/extra"
+MODULE_FILE="$MODULE_PATH/$module.ko"
 
 # Group: since distributions do it differently, look for wheel or use staff
 if grep -q '^staff:' /etc/group; then
@@ -11,15 +17,19 @@ else
     group="wheel"
 fi
 
-# invoke insmod with all arguments we got
-# and use a pathname, as insmod doesn't look in . by default
-insmod ./$module.ko $* || exit 1
+# invoke insmod with all arguments we got, using the ABSOLUTE PATH.
+# insmod $MODULE_FILE $* || exit 1
+# Note: Using modprobe is often simpler as it handles the path automatically, but since the
+# original script uses insmod to get the major number immediately, we'll fix the path for insmod.
+# However, if 'insmod' fails to load the module, try using 'modprobe' instead:
+# modprobe $module $* || exit 1 
+insmod $MODULE_FILE $* || exit 1
 
 # retrieve major number
 major=$(awk "\$2==\"$module\" {print \$1}" /proc/devices)
 
 # Remove stale nodes and replace them, then give gid and perms
-# Usually the script is shorter, it's scull that has several devices in it.
+# The rest of the script handles device node creation and permissions.
 
 rm -f /dev/${device}[0-3]
 mknod /dev/${device}0 c $major 0
@@ -45,22 +55,19 @@ chgrp $group /dev/${device}single
 chmod $mode  /dev/${device}single
 
 rm -f /dev/${device}uid
-mknod /dev/${device}uid   c $major 9
+mknod /dev/${device}uid  c $major 9
 chgrp $group /dev/${device}uid
 chmod $mode  /dev/${device}uid
 
 rm -f /dev/${device}wuid
-mknod /dev/${device}wuid  c $major 10
+mknod /dev/${device}wuid c $major 10
 chgrp $group /dev/${device}wuid
 chmod $mode  /dev/${device}wuid
 
 rm -f /dev/${device}priv
-mknod /dev/${device}priv  c $major 11
+mknod /dev/${device}priv c $major 11
 chgrp $group /dev/${device}priv
 chmod $mode  /dev/${device}priv
 
-
-
-
-
-
+# Success message
+echo "scull module loaded and device nodes created. Major: $major"

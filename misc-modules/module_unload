@@ -1,17 +1,21 @@
 #!/bin/sh
+# Script to unload a generic module and remove its primary device node.
+
 module=$1
-device=$1
+device=$1 # device name is the same as module name
 
 if [ $# -ne 1 ]; then
 	echo "Wrong number of arguments"
 	echo "usage: $0 module_name"
-	echo "Will unload the module specified by module_name and remove assocaited device"
+	echo "Will unload the module specified by module_name and remove associated device"
 	exit 1
 fi
 
 # invoke rmmod with all arguments we got
-rmmod $module || exit 1
+# Use the full path for rmmod for robustness in minimal environments
+/sbin/rmmod $module || exit 1
 
-# Remove stale nodes
-
+# Remove stale nodes. This assumes the module only created a single /dev/$device node.
 rm -f /dev/${device}
+
+echo "Module $module unloaded and device node /dev/$device removed."
