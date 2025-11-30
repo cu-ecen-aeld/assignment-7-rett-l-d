@@ -27,7 +27,7 @@ static int hello_init(void)
 {
 	int i;
 	for (i = 0; i < howmany; i++)
-		printk(KERN_ALERT "(%d) Hello, %s\n", i, whom);
+		printk(KERN_ALERT "(%d) Hello rett-l-d, %s\n", i, whom);
 	return 0;
 }
 
