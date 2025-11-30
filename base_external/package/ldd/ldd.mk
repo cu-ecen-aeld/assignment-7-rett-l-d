@@ -6,11 +6,11 @@
 ##############################################################
 
 #TODO: Fill up the contents below in order to reference your assignment 7 git contents
-LDD_VERSION = 05a2b981889fcbd60a02ee6fd2d0528dea96f86f
+LDD_VERSION = 878de97418a5766fe200efd281deb417cff0a50d
 # Note: Be sure to reference the *ssh* repository URL here (not https) to work properly
 # with ssh keys and the automated build/test system.
 # Your site should start with git@github.com:
-LDD_SITE = 'git@github.com:cu-ecen-aeld/assignment-7-rett84.git'
+LDD_SITE = 'git@github.com:cu-ecen-aeld/assignment-7-rett-l-d.git'
 LDD_SITE_METHOD = git
 LDD_GIT_SUBMODULES = YES
 LDD_MODULE_SUBDIRS = misc-modules
