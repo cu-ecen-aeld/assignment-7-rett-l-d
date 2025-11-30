@@ -13,8 +13,10 @@ LDD_VERSION = 878de97418a5766fe200efd281deb417cff0a50d
 LDD_SITE = 'git@github.com:cu-ecen-aeld/assignment-7-rett-l-d.git'
 LDD_SITE_METHOD = git
 LDD_GIT_SUBMODULES = YES
-LDD_MODULE_SUBDIRS = misc-modules
-LDD_MODULE_SUBDIRS += scull
+
+
+LDD_MODULE_SUBDIRS = misc-modules scull
+
 LDD_MODULE_MAKE_OPTS = KVERSION=$(LINUX_VERSION_PROBED)
 
 $(eval $(kernel-module))
@@ -26,6 +28,6 @@ define LDD_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 $(@D)/misc-modules/module_unload $(TARGET_DIR)/usr/bin/	
 	#$(INSTALL) -m 0755 $(@D)/misc-modules/S98lddmodules $(TARGET_DIR)/etc/init.d/S98lddmodules
 endef
-LDD_POST_BUILD_HOOKS += LDD_INSTALL_TARGET_CMDS
+
 
 $(eval $(generic-package))
